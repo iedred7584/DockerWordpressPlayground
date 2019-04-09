@@ -1,0 +1,53 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_playground
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_DATABASE: playground
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_bin
+
+  wordpress:
+    image: wordpress:latest
+    container_name: wordpress_playground
+    volumes:
+      - ./wordpress/wwwroot:/var/www/html
+      - ./wordpress/backup:/tmp/backup
+      - ./wordpress/log:/tmp/log
+    ports:
+      - 50080:80
+    depends_on:
+      - mysql
+    environment:
+      WORDPRESS_DB_NAME: playground
+      WORDPRESS_DB_USER: docker
+      WORDPRESS_DB_PASSWORD: docker
+    links:
+      - mysql:mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma_playground
+    ports:
+      - 50081:80
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: docker
+      PMA_PASSWORD: docker
+    links:
+      - mysql:db
+
+  # adminer:
+  #   image: adminer
+  #   container_name: adminer_playground
+  #   restart: always
+  #   ports:
+  #     - 50082:8080
