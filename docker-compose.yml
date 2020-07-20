@@ -1,7 +1,7 @@
-version: "3"
+version: "3.8"
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:8.0
     container_name: mysql_playground
     environment:
       MYSQL_ROOT_PASSWORD: docker
@@ -14,7 +14,7 @@ services:
     image: wordpress:latest
     container_name: wordpress_playground
     volumes:
-      - ./wordpress/wwwroot:/var/www/html
+      - ./wordpress/html:/var/www/html
       - ./wordpress/backup:/tmp/backup
       - ./wordpress/log:/tmp/log
     ports:
